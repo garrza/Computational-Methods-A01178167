@@ -1,17 +1,14 @@
 from collections import defaultdict
-import graphviz  # https://graphviz.readthedocs.io/en/stable/index.html
+import graphviz
 
 
 def analyze(R):
-    # Here goes your code to do the analysis
-    # 1. Reflexive: aRa for all a in X,
-    # 2. Symmetric: aRb implies bRa for all a,b in X
-    # 3. Transitive: aRb and bRc imply aRc for all a,b,c in X,
+    # Se define helper function para obtener el conjunto A
     def getA(R):
-        A = []
-        for i in R:
-            if i[0] not in A:
-                A.append(i[0])
+        A = set()
+        for pair in R:
+            A.add(pair[0])
+            A.add(pair[1])
         return A
 
     A = getA(R)
@@ -22,17 +19,22 @@ def analyze(R):
 
         tup = defaultdict(set)
 
-        for i in R:
-            tup[i[0]].add(i[1])
+        for pair in R:
+            tup[pair[0]].add(pair[1])
 
         for a in tup.keys():
-            all_b_in_aRb = tup.get(a)
-            if all_b_in_aRb is not None:
-                for b in all_b_in_aRb:
-                    all_c_in_bRc = tup.get(b)
-                    if a != b and all_c_in_bRc is not None:
-                        if not all_c_in_bRc.issubset(all_b_in_aRb):
-                            return False
+            relationsA = tup.get(a)
+            if relationsA is not None:
+                for rel in list(
+                    relationsA
+                ):  # Create a list to avoid dictionary modification during iteration
+                    relationsB = tup.get(rel)
+                    if relationsB is not None:
+                        for b in list(
+                            relationsB
+                        ):  # Create a list to avoid dictionary modification during iteration
+                            if b not in relationsA:
+                                return False
 
         return True
 
@@ -40,22 +42,18 @@ def analyze(R):
         if len(R) == 0:
             return True
 
-        for i in R:
-            if (i[1], i[0]) not in R:
+        for pair in R:
+            if (pair[1], pair[0]) not in R:
                 return False
         return True
 
     def checkReflexive(A, R):
-        if len(A) > 0 and len(R) == 0:
-            return False
-
-        elif len(A) == 0:
+        if len(A) == 0:
             return True
 
-        for i in A:
-            if (i, i) not in R:
+        for a in A:
+            if (a, a) not in R:
                 return False
-
         return True
 
     Reflexive = checkReflexive(A, R)
@@ -65,27 +63,27 @@ def analyze(R):
     return Reflexive, Symmetric, Transitive
 
 
-def plot():
-    """
-    Here goes your code to do the plot of the set
-    """
-    g = graphviz.Digraph("G", filename="hello.gv")
-    g.edge("Hello", "World")
+def plot(R):
+    g = graphviz.Digraph("G", filename="relation_graph.gv")
+    for pair in R:
+        g.edge(str(pair[0]), str(pair[1]))
     g.view()
 
 
 def main():
-    print("Hello World analyzing input!")
-    val = input("Enter your set: ")
+    print("Analyzing!")
+    # Aqui se le dejo el set de ejemplo, pero se podria pasar un set por input
+    # val = input("Enter the set: ")
+    val = {(0, 0), (0, 1), (0, 3), (1, 0), (1, 1), (2, 2), (3, 0), (3, 3)}
     print(val)
     Reflexive, Symmetric, Transitive = analyze(val)
     print(
         f"\
-    1. Reflexive: {Reflexive} \
-    2. Symmetric: {Symmetric} \
-    3. Transitive: {Transitive}"
+        1. Reflexive: {Reflexive} \
+        2. Symmetric: {Symmetric} \
+        3. Transitive: {Transitive}"
     )
-    plot()
+    plot(val)
 
 
 if __name__ == "__main__":
