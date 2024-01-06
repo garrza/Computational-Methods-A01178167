@@ -25,14 +25,10 @@ def analyze(R):
         for a in tup.keys():
             relationsA = tup.get(a)
             if relationsA is not None:
-                for rel in list(
-                    relationsA
-                ):  # Create a list to avoid dictionary modification during iteration
+                for rel in list(relationsA):
                     relationsB = tup.get(rel)
                     if relationsB is not None:
-                        for b in list(
-                            relationsB
-                        ):  # Create a list to avoid dictionary modification during iteration
+                        for b in list(relationsB):
                             if b not in relationsA:
                                 return False
 
