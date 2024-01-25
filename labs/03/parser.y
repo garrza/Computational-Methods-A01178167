@@ -7,16 +7,11 @@ void yyerror(const char *s);
 %token THE A BOY GIRL FLOWER TOUCHES LIKES SEES WITH EOL
 
 %%
+
 sentence : noun_phrase verb_phrase EOL {
     printf("PASS\n");
 }
         | sentence noun_phrase verb_phrase EOL {
-    printf("PASS\n");
-}
-        | sentence noun_phrase verb_phrase prep_phrase EOL {
-    printf("PASS\n");
-}
-        | sentence noun_phrase verb_phrase prep_phrase EOL {
     printf("PASS\n");
 }
         | error EOL {
@@ -24,18 +19,18 @@ sentence : noun_phrase verb_phrase EOL {
 }
         ;
 
-noun_phrase : cmplx_noun {
+noun_phrase : article noun {
     printf("noun_phrase\n");
 }
-            | cmplx_noun prep_phrase {
+            | article noun prep_phrase {
     printf("noun_phrase\n");
 }
             ;
 
-verb_phrase : cmplx_verb {
+verb_phrase : verb {
     printf("verb_phrase\n");
 }
-            | cmplx_verb prep_phrase {
+            | verb noun_phrase {
     printf("verb_phrase\n");
 }
             ;
@@ -45,16 +40,11 @@ prep_phrase : prep cmplx_noun {
 }
             ;
 
-cmplx_noun : article noun {
+cmplx_noun : noun {
     printf("cmplx_noun\n");
 }
-            ;
-
-cmplx_verb : verb {
-    printf("cmplx_verb\n");
-}
-            | verb noun_phrase {
-    printf("cmplx_verb\n");
+            | noun prep_phrase {
+    printf("cmplx_noun\n");
 }
             ;
 

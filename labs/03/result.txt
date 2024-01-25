@@ -1,0 +1,29 @@
+article
+noun
+noun_phrase
+verb
+verb_phrase
+PASS
+article
+noun
+noun_phrase
+verb
+article
+noun
+noun_phrase
+verb_phrase
+PASS
+article
+noun
+prep
+Error: syntax error
+FAIL
+article
+noun
+noun_phrase
+verb
+article
+noun
+noun_phrase
+verb_phrase
+Error: syntax error
